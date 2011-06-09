@@ -2,4 +2,4 @@
 Bash Scripts
 ============
 
-Bash scripts I've collected, or written.
+Bash scripts I've collected.
