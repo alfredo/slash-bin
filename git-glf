@@ -1,1 +1,0 @@
-git log --format=%H --follow -- "$@" | xargs --no-run-if-empty git show --stat
