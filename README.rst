@@ -2,7 +2,8 @@
  Bash Scripts
 ==============
 
-Useful bash scripts I've collected.
+Useful bash scripts I've collected. Please note that any external binary dependency must be
+installled inside the ``bin`` directory.
 
 
 Requirements
