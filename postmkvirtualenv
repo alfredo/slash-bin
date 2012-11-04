@@ -2,4 +2,4 @@
 # This hook is run after a new virtualenv is activated.
 echo cd `pwd` > $VIRTUAL_ENV/bin/postactivate
 echo export DJANGO_SETTINGS_MODULE= >> $VIRTUAL_ENV/bin/postactivate
-echo "Hook created to move to current directory"
+echo "Hook created to move to move to current directory."
