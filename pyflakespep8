@@ -32,6 +32,9 @@ epylint_warning = make_re(
     'broad-except',
     'pointless-statement',
     'expression-not-assigned',
+    'attribute-defined-outside-init',
+    'deprecated-lambda',
+    'logging-not-lazy',
 )
 
 def run(cmd, ignore_re, warning_re):
