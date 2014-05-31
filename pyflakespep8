@@ -11,6 +11,8 @@ def make_re(*msgs):
 pyflakes_ignore = make_re(
     'unable to detect undefined names',
     'Unable to import',
+    'missing-docstring',
+    'Invalid argument name "pk"',
 )
 pyflakes_warning = make_re(
     'imported but unused',
@@ -18,7 +20,7 @@ pyflakes_warning = make_re(
     'redefinition of unused',
     'at least two spaces before inline comment',
 )
-# E221,E701,E202
+# 'E221', 'E701', 'E202'
 pep8_ignore = []
 pep8_warning = make_re('.')
 
@@ -32,21 +34,59 @@ epylint_warning = make_re(
     'broad-except',
     'pointless-statement',
     'expression-not-assigned',
-    'attribute-defined-outside-init',
-    'deprecated-lambda',
-    'logging-not-lazy',
+    'relative-import',
+    'invalid-name',
+    'too-few-public-methods',
+    'Line too long',
+    'Unused import',
+    'defined outside __init__',
+    'Trailing whitespace',
+    'Exactly one space required after assignment',
+    'Too many local variables',
+    'Too many arguments',
+    'Too many instance attributes',
+    'Exactly one space required after comma',
 )
+
+epylint_ignore = make_re(
+    'missing-docstring',
+    'Invalid constant name',
+    'Too many public methods',
+    'Method could be a function',
+    'Invalid method name',
+    'Too few public methods',
+    'Old-style class defined',
+    'Similar lines in',
+    'Invalid module name "flymake',
+    'Invalid argument name "pk"',
+    'Exactly one space required before assignment',
+    'Final newline missing',
+)
+
+
+def _clean_message(message):
+    if "] " in message:
+        message = message.split('] ')[1]
+    return message.capitalize()
+
+
+def format_line(line, prefix='Warning: '):
+    line, message = line.split(': ', 1)
+    return u'%s: %s%s' % (line, prefix, _clean_message(message))
+
 
 def run(cmd, ignore_re, warning_re):
     output = commands.getoutput(cmd)
     for line in output.splitlines():
-        if ignore_re and ignore_re.search(line):
+        if ignore_re and ignore_re.search(line) or not ':' in line:
             continue
-        if ': ' in line and warning_re and warning_re.search(line):
-            line = '%s: Warning %s' % tuple(line.split(': ', 1))
+        if warning_re and warning_re.search(line):
+            line = format_line(line)
+        else:
+            line = format_line(line, prefix='')
         print line
 
-run('epylint %s 2>/dev/null' % sys.argv[1], None, epylint_warning)
+run('epylint %s 2>/dev/null' % sys.argv[1], epylint_ignore, epylint_warning)
 run('pyflakes %s' % sys.argv[1], pyflakes_ignore, pyflakes_warning)
 
 pep8_ignore = ' '.join('--ignore=%s' % i for i in pep8_ignore)
